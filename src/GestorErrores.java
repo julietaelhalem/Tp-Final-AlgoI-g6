@@ -4,8 +4,6 @@ import java.util.List;
 
 public class GestorErrores {
     private List<String> listaErrores;
-    @SuppressWarnings("unused")
-    private String nivelError;
     private Date registroError;
 
     public GestorErrores() {
@@ -19,6 +17,7 @@ public class GestorErrores {
 
     public void registrarError(String mensaje) {
         listaErrores.add(mensaje);
+        registroError = new Date(); // Registrar el tiempo de cada error
     }
 
     public List<String> getListaErrores() {
@@ -27,5 +26,16 @@ public class GestorErrores {
 
     public Date getRegistroError() {
         return registroError;
+    }
+
+    public void imprimirErrores() {
+        if (listaErrores.isEmpty()) {
+            System.out.println("No se registraron errores.");
+        } else {
+            System.out.println("Errores registrados:");
+            for (String error : listaErrores) {
+                System.out.println("- " + error);
+            }
+        }
     }
 }
