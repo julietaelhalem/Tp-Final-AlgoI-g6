@@ -1,25 +1,28 @@
-import java.util.List;
-
 public class GestorValoresFaltantes {
+    @SuppressWarnings("unused")
+    private String metodoManejo;
+    private Object valorImputacion;
+    private GestorErrores gestorErrores;
 
-    // Rellena todas las celdas con valor NA en una columna específica
-    public static void imputarColumna(String etiqueta, TablaDatos tabla, Object valorImputacion) {
-        List<CeldaDatos> columna = tabla.getColumna(etiqueta);
-        for (CeldaDatos celda : columna) {
-            if (celda.getValor() == CeldaDatos.NA) {
-                celda.setValor(valorImputacion);
-            }
+    public GestorValoresFaltantes(String metodoManejo, Object valorImputacion, GestorErrores gestorErrores) {
+        this.metodoManejo = metodoManejo;
+        this.valorImputacion = valorImputacion;
+        this.gestorErrores = gestorErrores;
+    }
+
+    public void administrar(TablaDatos tabla, String columna) {
+        try {
+            tabla.imputarValores(columna, valorImputacion);
+        } catch (Exception e) {
+            gestorErrores.manejarError("Error en imputación: " + e.getMessage());
         }
     }
 
-    // Rellena todas las celdas con valor NA en la tabla completa
-    public static void imputarTabla(TablaDatos tabla, Object valorImputacion) {
-        for (Fila fila : tabla.getFilas()) {
-            for (CeldaDatos celda : fila.getCeldas()) {
-                if (celda.getValor() == CeldaDatos.NA) {
-                    celda.setValor(valorImputacion);
-                }
-            }
-        }
+    public void aplicarValorPorDefecto(TablaDatos tabla, String columna) {
+        administrar(tabla, columna);
+    }
+
+    public void imputar(TablaDatos tabla, String columna) {
+        administrar(tabla, columna);
     }
 }

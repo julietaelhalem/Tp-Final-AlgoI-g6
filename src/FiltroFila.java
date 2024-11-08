@@ -1,43 +1,44 @@
-import java.util.ArrayList;
 import java.util.List;
 
 public class FiltroFila {
-    private int filaObjetivo; // Índice de la fila que se quiere analizar (opcional)
-    private Object criterioFiltro; // Valor que debe cumplir la fila
+    private List<String> criterios;
+    private List<String> operadores;
     private TablaDatos tablaDatos;
 
-    public FiltroFila(int filaObjetivo, Object criterioFiltro, TablaDatos tablaDatos) {
-        this.filaObjetivo = filaObjetivo;
-        this.criterioFiltro = criterioFiltro;
+    public FiltroFila(List<String> criterios, List<String> operadores, TablaDatos tablaDatos) {
+        this.criterios = criterios;
+        this.operadores = operadores;
         this.tablaDatos = tablaDatos;
     }
 
-    public void aplicar() {
-        // Validar si el índice de fila es válido
-        if (filaObjetivo < 0 || filaObjetivo >= tablaDatos.getNumeroFilas()) {
-            System.out.println("El índice de la fila especificada está fuera de rango.");
-            return;
-        }
-
-        // Obtener la lista de filas original
-        List filas = tablaDatos.getFilas();
-        List filasFiltradas = new ArrayList<>();
-
-        // Filtrar filas en función del criterio especificado
-        for (Fila fila : filas) {
-            for (CeldaDatos celda : fila.getCeldas()) {
-                Object valor = celda.getValor();
-
-                // Si el valor de alguna celda en la fila cumple el criterio, añadir la fila a la lista filtrada
-                if (valor.equals(criterioFiltro)) {
-                    filasFiltradas.add(fila);
-                    break; // Salimos del bucle de celdas si se cumple el criterio para esta fila
-                }
+    @SuppressWarnings("unchecked")
+    public TablaDatos aplicar() {
+        TablaDatos resultado = new TablaDatos();
+        for (Fila fila : tablaDatos.getFilas()) {
+            boolean cumpleCondicion = evaluarCondicion(fila);
+            if (cumpleCondicion) {
+                resultado.insertarFila((List<Object>) fila);
             }
         }
+        return resultado;
+    }
 
-        // Actualizar la lista de filas en TablaDatos con las filas filtradas
-        tablaDatos.setFilas(filasFiltradas);
-        tablaDatos.setNumeroFilas(filasFiltradas.size());
+    private boolean evaluarCondicion(Fila fila) {
+        boolean resultado = evaluarCriterio(fila, criterios.get(0));
+        for (int i = 1; i < criterios.size(); i++) {
+            String operador = operadores.get(i - 1);
+            boolean criterioEvaluado = evaluarCriterio(fila, criterios.get(i));
+            if (operador.equalsIgnoreCase("and")) {
+                resultado = resultado && criterioEvaluado;
+            } else if (operador.equalsIgnoreCase("or")) {
+                resultado = resultado || criterioEvaluado;
+            }
+        }
+        return resultado;
+    }
+
+    private boolean evaluarCriterio(Fila fila, String criterio) {
+        // Implementar la lógica para evaluar el criterio
+        return true; // Placeholder
     }
 }

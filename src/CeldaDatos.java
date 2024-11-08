@@ -1,36 +1,16 @@
 public class CeldaDatos {
-    public static final String NA = "NA";
-    
     private Object valor;
     private String tipoDato;
     private int posicionFila;
     private int posicionColumna;
+    private boolean esValorFaltante;
 
     public CeldaDatos(Object valor, String tipoDato, int posicionFila, int posicionColumna) {
-        if (validarTipoDato(valor, tipoDato)) {
-            this.valor = valor;
-        } else {
-            this.valor = NA;
-        }
+        this.valor = valor;
         this.tipoDato = tipoDato;
         this.posicionFila = posicionFila;
         this.posicionColumna = posicionColumna;
-    }
-
-    private boolean validarTipoDato(Object valor, String tipoDato) {
-        if (valor == null || valor.equals(NA)) {
-            return true; // Aceptamos NA como válido para cualquier tipo
-        }
-        switch (tipoDato.toLowerCase()) {
-            case "numerico":
-                return valor instanceof Number;
-            case "booleano":
-                return valor instanceof Boolean;
-            case "cadena":
-                return valor instanceof String;
-            default:
-                return false;
-        }
+        this.esValorFaltante = valor == null;
     }
 
     public Object getValor() {
@@ -38,14 +18,30 @@ public class CeldaDatos {
     }
 
     public void setValor(Object valor) {
-        if (validarTipoDato(valor, tipoDato)) {
-            this.valor = valor;
-        } else {
-            this.valor = NA;
-        }
+        this.valor = valor;
+        this.esValorFaltante = valor == null;
     }
 
     public String getTipoDato() {
         return tipoDato;
+    }
+
+    public boolean esNA() {
+        return esValorFaltante;
+    }
+
+    public void imputarValor(Object valorImputacion) {
+        if (esValorFaltante) {
+            this.valor = valorImputacion;
+            this.esValorFaltante = false;
+        }
+    }
+
+    public int getPosicionFila() {
+        return posicionFila;
+    }
+
+    public int getPosicionColumna() {
+        return posicionColumna;
     }
 }

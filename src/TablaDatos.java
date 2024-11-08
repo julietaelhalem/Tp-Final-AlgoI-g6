@@ -2,68 +2,100 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TablaDatos {
-    private List<List<CeldaDatos>> filas; // Almacena filas, cada fila es una lista de celdas
-    private int numeroFilas; // Número de filas
-    private int numeroColumnas; // Número de columnas
+    private List<Fila> filas;                  // Lista de filas en la tabla
+    private int numeroFilas;                   // Número de filas en la tabla
+    private int numeroColumnas;                // Número de columnas en la tabla
+    private List<String> etiquetasColumnas;    // Etiquetas de las columnas
 
     public TablaDatos() {
-        filas = new ArrayList<>();
-        numeroFilas = 0;
-        numeroColumnas = 0;
+        this.filas = new ArrayList<>();
+        this.etiquetasColumnas = new ArrayList<>();
+        this.numeroFilas = 0;
+        this.numeroColumnas = 0;
     }
 
-    // Método para agregar una nueva fila a la tabla
-    public void agregarFila(List<CeldaDatos> nuevaFila) {
-        filas.add(nuevaFila);
-        numeroFilas++;
-        numeroColumnas = Math.max(numeroColumnas, nuevaFila.size()); // Actualiza el número máximo de columnas
+    // Obtener la lista de filas
+    public List<Fila> getFilas() {
+        return filas;
     }
 
-    // Método para obtener una fila por su índice
-    public List<CeldaDatos> getFila(int index) {
-        if (index < 0 || index >= numeroFilas) {
+    // Obtener la cantidad de filas
+    public int getCantidadFilas() {
+        return numeroFilas;
+    }
+
+    // Obtener la cantidad de columnas
+    public int getCantidadColumnas() {
+        return numeroColumnas;
+    }
+
+    // Obtener las etiquetas de las columnas
+    public List<String> getEtiquetasColumnas() {
+        return etiquetasColumnas;
+    }
+
+    // Establecer las etiquetas de las columnas
+    public void setEtiquetasColumnas(List<String> etiquetas) {
+        this.etiquetasColumnas = etiquetas;
+        this.numeroColumnas = etiquetas.size();
+    }
+
+    // Obtener una fila específica por índice
+    public Fila getFila(int index) {
+        if (index < 0 || index >= filas.size()) {
             throw new IndexOutOfBoundsException("Índice de fila fuera de rango");
         }
         return filas.get(index);
     }
 
-    // Método para obtener una celda específica
-    public CeldaDatos getCelda(int filaIndex, int columnaIndex) {
-        if (filaIndex < 0 || filaIndex >= numeroFilas || columnaIndex < 0 || columnaIndex >= numeroColumnas) {
+    // Método para insertar una nueva fila en la tabla
+    public void insertarFila(List<Object> valores) {
+        if (valores.size() != numeroColumnas) {
+            throw new IllegalArgumentException("La cantidad de valores no coincide con el número de columnas");
+        }
+        
+        Fila nuevaFila = new Fila();
+        for (int i = 0; i < numeroColumnas; i++) {
+            Object valor = valores.get(i);
+            CeldaDatos celda = new CeldaDatos(valor, determinarTipoDato(valor), numeroFilas, i);
+            nuevaFila.agregarCelda(celda);
+        }
+        filas.add(nuevaFila);
+        numeroFilas++;
+    }
+
+    // Método para determinar el tipo de dato de un valor
+    private String determinarTipoDato(Object valor) {
+        if (valor instanceof Integer || valor instanceof Double || valor instanceof Float) {
+            return "Numérico";
+        } else if (valor instanceof Boolean) {
+            return "Booleano";
+        } else if (valor instanceof String) {
+            return "Cadena";
+        } else {
+            return "Desconocido";
+        }
+    }
+
+    // Obtener una celda específica por índice de fila y columna
+    public CeldaDatos getCelda(int fila, int columna) {
+        if (fila < 0 || fila >= numeroFilas || columna < 0 || columna >= numeroColumnas) {
             throw new IndexOutOfBoundsException("Índice de celda fuera de rango");
         }
-        return filas.get(filaIndex).get(columnaIndex);
+        return filas.get(fila).getCelda(columna);
     }
 
-    // Método para obtener el número de filas
-    public int getNumeroFilas() {
-        return numeroFilas;
-    }
+    // Imputar valores en una columna para valores faltantes (NA)
+    public void imputarValores(String columna, Object valorImputacion) {
+        int columnaIndex = etiquetasColumnas.indexOf(columna);
+        if (columnaIndex == -1) throw new IllegalArgumentException("Columna no encontrada");
 
-    // Método para obtener el número de columnas
-    public int getNumeroColumnas() {
-        return numeroColumnas;
-    }
-
-    // Método para imprimir la tabla de datos en un formato legible
-    public void imprimirTabla() {
-        for (List<CeldaDatos> fila : filas) {
-            for (CeldaDatos celda : fila) {
-                System.out.print(celda.getValor() + " "); // Asumiendo que CeldaDatos tiene un método getValor()
+        for (Fila fila : filas) {
+            CeldaDatos celda = fila.getCelda(columnaIndex);
+            if (celda.getValor() == null) {
+                celda.setValor(valorImputacion);
             }
-            System.out.println();
         }
     }
 
-    // Método para limpiar la tabla de datos
-    public void limpiarTabla() {
-        filas.clear();
-        numeroFilas = 0;
-        numeroColumnas = 0;
-    }
-
-    // Método para verificar si la tabla está vacía
-    public boolean estaVacia() {
-        return numeroFilas == 0;
-    }
 }

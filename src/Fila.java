@@ -5,7 +5,7 @@ public class Fila {
     private List<CeldaDatos> celdas;
 
     public Fila() {
-        this.celdas = new ArrayList<>();
+        celdas = new ArrayList<>();
     }
 
     public void agregarCelda(CeldaDatos celda) {
@@ -16,7 +16,19 @@ public class Fila {
         return celdas.get(index);
     }
 
+    public void eliminarCelda(int index) {
+        celdas.remove(index);
+    }
+
     public List<CeldaDatos> getCeldas() {
         return celdas;
+    }
+
+    public Fila copiar() {
+        Fila copia = new Fila();
+        for (CeldaDatos celda : celdas) {
+            copia.agregarCelda(new CeldaDatos(celda.getValor(), celda.getTipoDato(), celda.getPosicionFila(), celda.getPosicionColumna()));
+        }
+        return copia;
     }
 }

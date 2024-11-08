@@ -1,7 +1,5 @@
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+// import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,52 +14,33 @@ public class LectorCSV {
         this.encoding = encoding;
     }
 
-    public TablaDatos leerArchivo() {
-        TablaDatos tabla = new TablaDatos();
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(rutaArchivo), Charset.forName(encoding))) {
+    public TablaDatos leerArchivo() throws IOException {
+        TablaDatos tablaDatos = new TablaDatos();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(rutaArchivo), encoding))) {
             String linea;
-            boolean esPrimeraLinea = true;
             while ((linea = reader.readLine()) != null) {
-                String[] valores = linea.split(Character.toString(delimitador));
-                if (esPrimeraLinea) {
-                    for (String etiqueta : valores) {
-                        tabla.agregarColumna(etiqueta, "String"); // Tipo de dato inicial: String
-                    }
-                    esPrimeraLinea = false;
-                } else {
-                    Fila fila = new Fila();
-                    for (String valor : valores) {
-                        CeldaDatos celda = new CeldaDatos(valor, "String", 0, 0); // Tipo inicial: String
-                        fila.agregarCelda(celda);
-                    }
-                    tabla.agregarFila(fila);
+                String[] valores = linea.split(String.valueOf(delimitador));
+                List<Object> fila = new ArrayList<>();
+                for (String valor : valores) {
+                    fila.add(valor);
                 }
+                tablaDatos.insertarFila(fila);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return tabla;
+        return tablaDatos;
     }
 
-    public void escribirArchivo(TablaDatos tabla) {
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(rutaArchivo), Charset.forName(encoding))) {
-            // Escribir encabezado (etiquetas de las columnas)
-            List<String> etiquetasColumnas = tabla.getEtiquetasColumnas();
-            writer.write(String.join(Character.toString(delimitador), etiquetasColumnas));
-            writer.newLine();
-
-            // Escribir cada fila
-            for (Fila fila : tabla.getFilas()) {
-                List<String> valores = new ArrayList<>();
-                for (CeldaDatos celda : fila.getCeldas()) {
-                    valores.add(celda.getValor().toString());
+    public void escribirArchivo(TablaDatos tabla) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo), encoding))) {
+            for (int i = 0; i < tabla.getCantidadFilas(); i++) {
+                Fila fila = tabla.getFila(i);
+                StringBuilder linea = new StringBuilder();
+                for (int j = 0; j < tabla.getCantidadColumnas(); j++) {
+                    linea.append(fila.getCelda(j).getValor()).append(delimitador);
                 }
-                writer.write(String.join(Character.toString(delimitador), valores));
+                writer.write(linea.toString());
                 writer.newLine();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
-

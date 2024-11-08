@@ -1,6 +1,7 @@
 import java.io.IOException;
 
 public class BibliotecaCSV {
+    @SuppressWarnings("unused")
     private String nombreArchivo;
     private String rutaArchivo;
     private TablaDatos tablaDatos;
@@ -11,22 +12,14 @@ public class BibliotecaCSV {
         this.tablaDatos = new TablaDatos();
     }
 
-    public TablaDatos cargarCSV() {
+    public TablaDatos cargarCSV() throws IOException {
         LectorCSV lector = new LectorCSV(',', rutaArchivo, "UTF-8");
-        try {
-            this.tablaDatos = lector.leerArchivo();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.tablaDatos = lector.leerArchivo();
         return tablaDatos;
     }
 
-    public void exportarCSV() {
+    public void exportarCSV() throws IOException {
         LectorCSV escritor = new LectorCSV(',', rutaArchivo, "UTF-8");
-        try {
-            escritor.escribirArchivo(tablaDatos);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        escritor.escribirArchivo(tablaDatos);
     }
 }
