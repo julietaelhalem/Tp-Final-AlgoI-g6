@@ -1,44 +1,32 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class FiltroFila {
-    private List<String> criterios;
-    private List<String> operadores;
+    private String columna;
+    private String valorFiltro;
     private TablaDatos tablaDatos;
 
-    public FiltroFila(List<String> criterios, List<String> operadores, TablaDatos tablaDatos) {
-        this.criterios = criterios;
-        this.operadores = operadores;
+    public FiltroFila(String columna, String valorFiltro, TablaDatos tablaDatos) {
+        this.columna = columna;
+        this.valorFiltro = valorFiltro;
         this.tablaDatos = tablaDatos;
     }
 
-    @SuppressWarnings("unchecked")
-    public TablaDatos aplicar() {
-        TablaDatos resultado = new TablaDatos();
+    // Método para filtrar filas basado en el valor de una columna específica
+    public List<Fila> filtrar() {
+        List<Fila> filasFiltradas = new ArrayList<>();
+        int indiceColumna = tablaDatos.getEtiquetasColumnas().indexOf(columna);
+
+        if (indiceColumna == -1) {
+            throw new IllegalArgumentException("La columna especificada no existe.");
+        }
+
         for (Fila fila : tablaDatos.getFilas()) {
-            boolean cumpleCondicion = evaluarCondicion(fila);
-            if (cumpleCondicion) {
-                resultado.insertarFila((List<Object>) fila);
+            CeldaDatos celda = fila.getCelda(indiceColumna);
+            if (celda.getValor() != null && celda.getValor().toString().equals(valorFiltro)) {
+                filasFiltradas.add(fila);
             }
         }
-        return resultado;
-    }
-
-    private boolean evaluarCondicion(Fila fila) {
-        boolean resultado = evaluarCriterio(fila, criterios.get(0));
-        for (int i = 1; i < criterios.size(); i++) {
-            String operador = operadores.get(i - 1);
-            boolean criterioEvaluado = evaluarCriterio(fila, criterios.get(i));
-            if (operador.equalsIgnoreCase("and")) {
-                resultado = resultado && criterioEvaluado;
-            } else if (operador.equalsIgnoreCase("or")) {
-                resultado = resultado || criterioEvaluado;
-            }
-        }
-        return resultado;
-    }
-
-    private boolean evaluarCriterio(Fila fila, String criterio) {
-        // Implementar la lógica para evaluar el criterio
-        return true; // Placeholder
+        return filasFiltradas;
     }
 }

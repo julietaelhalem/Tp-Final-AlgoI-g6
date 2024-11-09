@@ -12,6 +12,11 @@ public class BibliotecaCSV {
         this.tablaDatos = new TablaDatos();
     }
 
+    // Implementación de setTablaDatos para asignar la tabla de datos
+    public void setTablaDatos(TablaDatos tablaDatos) {
+        this.tablaDatos = tablaDatos;
+    }
+
     public TablaDatos cargarCSV() throws IOException {
         LectorCSV lector = new LectorCSV(',', rutaArchivo, "UTF-8");
         this.tablaDatos = lector.leerArchivo();

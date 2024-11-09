@@ -31,4 +31,14 @@ public class Fila {
         }
         return copia;
     }
+
+    // Método para obtener el valor de la celda dada una etiqueta de columna
+    public String getValor(String columna, TablaDatos tablaDatos) {
+        int columnaIndex = tablaDatos.getEtiquetasColumnas().indexOf(columna);
+        if (columnaIndex == -1) {
+            throw new IllegalArgumentException("La columna especificada no existe.");
+        }
+        CeldaDatos celda = celdas.get(columnaIndex);
+        return celda.getValor() != null ? celda.getValor().toString() : null;
+    }
 }
