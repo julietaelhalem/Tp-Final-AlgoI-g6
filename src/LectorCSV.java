@@ -37,6 +37,7 @@ public class LectorCSV {
     // Escribe los datos de TablaDatos en el archivo CSV
     public void escribirArchivo(TablaDatos tabla) throws IOException {
         // Abre el archivo para escribir usando el encoding especificado
+          
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo), encoding))) {
             for (int i = 0; i < tabla.getCantidadFilas(); i++) {
                 Fila fila = tabla.getFila(i);

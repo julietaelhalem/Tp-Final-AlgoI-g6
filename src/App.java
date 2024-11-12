@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,14 +22,22 @@ public class App {
         System.out.println("Tabla de productos inicial:");
         mostrarTabla(tablaDatos);
 
-        // Modificar el estado de un producto (usando setValor en Fila)
+        // Modificar el estado de un producto (usando setValor en Fila), con verificación de existencia
         System.out.println("\nModificando el estado del producto con ID 2...");
-        tablaDatos.getFila(1).getCelda(2).setValor("En Stock");
+        if (tablaDatos.getFilas().size() > 1) {  // Verificar que exista la fila en el índice 1
+            tablaDatos.getFila(1).getCelda(2).setValor("En Stock");
+        } else {
+            System.out.println("La fila con ID 2 no existe.");
+        }
         mostrarTabla(tablaDatos);
 
-        // Eliminar un producto (por ejemplo, el producto con ID 4)
+        // Eliminar un producto (por ejemplo, el producto con ID 4), con verificación de existencia
         System.out.println("\nEliminando el producto con ID 4...");
-        tablaDatos.getFilas().remove(3);
+        if (tablaDatos.getFilas().size() > 3) {  // Verificar que exista la fila en el índice 3
+            tablaDatos.getFilas().remove(3);
+        } else {
+            System.out.println("La fila con ID 4 no existe.");
+        }
         mostrarTabla(tablaDatos);
 
         // Filtrar productos que están "En Stock" (usando FiltroFila)
@@ -47,10 +56,27 @@ public class App {
 
         // Exportar la tabla a un archivo CSV (usando BibliotecaCSV)
         String nombreArchivo = "inventario.csv";
-        String rutaArchivo = "Escritorio/TP FINAL/pruebas/";
+        String rutaArchivo = "test.txt";
+
+        // Crear el archivo si no existe
+        File archivo = new File(rutaArchivo);
+        if (!archivo.exists()) {
+            try {
+                archivo.createNewFile(); // Crea el archivo
+            } catch (Exception e) {
+                System.out.println("Error al crear el archivo: " + e.getMessage());
+            }
+        }
 
         BibliotecaCSV bibliotecaCSV = new BibliotecaCSV(nombreArchivo, rutaArchivo);
         bibliotecaCSV.setTablaDatos(tablaDatos);
+
+        // // Verificar que la cantidad de filas en la tabla es consistente antes de exportar
+        // if (tablaDatos.getFilas().size() == tablaDatos.getCantidadFilas()) {
+        //     BibliotecaCSV.exportarCSV();
+        // } else {
+        //     System.out.println("Error: La cantidad de filas en la tabla no es consistente. Exportación abortada.");
+        // }
 
         try {
             bibliotecaCSV.exportarCSV();
