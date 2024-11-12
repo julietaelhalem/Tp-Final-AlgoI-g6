@@ -98,4 +98,13 @@ public class TablaDatos {
         }
     }
 
+    public void eliminarFilas(int i) {
+        if (i >= 0 && i < filas.size()) {
+            filas.remove(i);
+            numeroFilas = filas.size();  // Actualiza la cantidad de filas
+        } else {
+            System.out.println("Índice fuera de rango.");
+        }
+    }
+
 }

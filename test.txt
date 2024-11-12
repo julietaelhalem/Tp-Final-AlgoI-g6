@@ -1,4 +1,4 @@
-5,Diccionario de Frances,Vendido,
+5,Diccionario de Francés,Vendido,
 3,Guía de SQL,En Stock,
 1,Libro de Java,En Stock,
 2,Manual de Python,En Stock,

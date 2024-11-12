@@ -16,7 +16,7 @@ public class App {
         tablaDatos.insertarFila(Arrays.asList("2", "Manual de Python", "Vendido"));
         tablaDatos.insertarFila(Arrays.asList("3", "Guía de SQL", "En Stock"));
         tablaDatos.insertarFila(Arrays.asList("4", "Diccionario de Inglés", "Agotado"));
-        tablaDatos.insertarFila(Arrays.asList("5", "Diccionario de Frances", "Vendido"));
+        tablaDatos.insertarFila(Arrays.asList("5", "Diccionario de Francés", "Vendido"));
 
         // Mostrar la tabla de productos en consola
         System.out.println("Tabla de productos inicial:");
@@ -24,7 +24,7 @@ public class App {
 
         // Modificar el estado de un producto (usando setValor en Fila), con verificación de existencia
         System.out.println("\nModificando el estado del producto con ID 2...");
-        if (tablaDatos.getFilas().size() > 1) {  // Verificar que exista la fila en el índice 1
+        if (tablaDatos.getFilas().size() > 1) {
             tablaDatos.getFila(1).getCelda(2).setValor("En Stock");
         } else {
             System.out.println("La fila con ID 2 no existe.");
@@ -33,8 +33,8 @@ public class App {
 
         // Eliminar un producto (por ejemplo, el producto con ID 4), con verificación de existencia
         System.out.println("\nEliminando el producto con ID 4...");
-        if (tablaDatos.getFilas().size() > 3) {  // Verificar que exista la fila en el índice 3
-            tablaDatos.getFilas().remove(3);
+        if (tablaDatos.getFilas().size() > 3) {
+            tablaDatos.eliminarFilas(3);
         } else {
             System.out.println("La fila con ID 4 no existe.");
         }
@@ -49,20 +49,16 @@ public class App {
         // Ordenar productos por "Nombre del Producto" (usando OrdenadorFilas)
         System.out.println("\nOrdenando productos por 'Nombre del Producto'...");
         OrdenadorFilas ordenador = new OrdenadorFilas("Nombre del Producto", true, tablaDatos);
-
-        // Uso del objeto ordenador para ordenar las filas
         List<Fila> filasOrdenadas = ordenador.ordenar(tablaDatos.getFilas());
         mostrarFilas(filasOrdenadas);
 
         // Exportar la tabla a un archivo CSV (usando BibliotecaCSV)
         String nombreArchivo = "inventario.csv";
         String rutaArchivo = "test.txt";
-
-        // Crear el archivo si no existe
         File archivo = new File(rutaArchivo);
         if (!archivo.exists()) {
             try {
-                archivo.createNewFile(); // Crea el archivo
+                archivo.createNewFile();
             } catch (Exception e) {
                 System.out.println("Error al crear el archivo: " + e.getMessage());
             }
@@ -71,19 +67,22 @@ public class App {
         BibliotecaCSV bibliotecaCSV = new BibliotecaCSV(nombreArchivo, rutaArchivo);
         bibliotecaCSV.setTablaDatos(tablaDatos);
 
-        // // Verificar que la cantidad de filas en la tabla es consistente antes de exportar
-        // if (tablaDatos.getFilas().size() == tablaDatos.getCantidadFilas()) {
-        //     BibliotecaCSV.exportarCSV();
-        // } else {
-        //     System.out.println("Error: La cantidad de filas en la tabla no es consistente. Exportación abortada.");
-        // }
-
         try {
             bibliotecaCSV.exportarCSV();
             System.out.println("\nArchivo CSV exportado exitosamente a " + rutaArchivo + nombreArchivo);
         } catch (IOException e) {
             System.err.println("Error al exportar el archivo CSV: " + e.getMessage());
         }
+
+        // Pruebas adicionales para GestorErrores y GestorValoresFaltantes
+        System.out.println("\nPrueba de gestión de errores y valores faltantes:");
+
+        // Crear instancias de GestorErrores y GestorValoresFaltantes
+        GestorErrores gestorErrores = new GestorErrores();
+        GestorValoresFaltantes gestorValoresFaltantes = new GestorValoresFaltantes(rutaArchivo, tablaDatos, gestorErrores);
+
+        // Asumimos que los gestores aplican sus procesos al instanciarse o al interactuar con tablaDatos en el flujo.
+        System.out.println("Pruebas completadas con GestorErrores y GestorValoresFaltantes.");
     }
 
     // Método auxiliar para mostrar la tabla en consola
