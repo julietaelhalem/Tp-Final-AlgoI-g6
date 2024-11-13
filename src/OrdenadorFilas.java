@@ -3,9 +3,9 @@ import java.util.List;
 
 public class OrdenadorFilas {
     
-    private String columna;          // Nombre de la columna por la que se ordenarán las filas
-    private boolean ascendente;      // Indica si el orden debe ser ascendente o descendente
-    private TablaDatos tablaDatos;   // Referencia a la tabla de datos para obtener la lista de filas y sus valores
+    private String columna;          
+    private boolean ascendente;     
+    private TablaDatos tablaDatos;   
 
     // Constructor que inicializa la columna, el tipo de orden (ascendente o descendente) y la tabla de datos
     public OrdenadorFilas(String columna, boolean ascendente, TablaDatos tablaDatos) {
@@ -19,8 +19,8 @@ public class OrdenadorFilas {
         // Comparador para ordenar filas según el valor de la columna especificada
         Comparator<Fila> comparador = Comparator.comparing(
             fila -> {
-                String valor = fila.getValor(columna, tablaDatos); // Obtiene el valor de la columna en la fila
-                return (valor != null) ? valor : ""; // Evita valores null en la comparación, usando "" en su lugar
+                String valor = fila.getValor(columna, tablaDatos); 
+                return (valor != null) ? valor : ""; 
             }
         );
 
@@ -29,7 +29,7 @@ public class OrdenadorFilas {
             comparador = comparador.reversed();
         }
 
-        filas.sort(comparador); // Ordena la lista de filas usando el comparador definido
+        filas.sort(comparador); 
         return filas;
     }
 }

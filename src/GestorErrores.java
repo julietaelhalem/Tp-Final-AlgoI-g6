@@ -4,8 +4,8 @@ import java.util.List;
 
 public class GestorErrores {
     
-    private List<String> listaErrores;   // Lista que almacena los mensajes de error registrados
-    private Date registroError;          // Fecha y hora del último error registrado
+    private List<String> listaErrores;   
+    private Date registroError;          
 
     // Constructor que inicializa la lista de errores
     public GestorErrores() {

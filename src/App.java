@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import Excepciones.ExcepcionDatosInvalidos;
+import Excepciones.ExcepcionLecturaArchivo;
+import Excepciones.ExcepcionValorFaltante;
+
 public class App {
     public static void main(String[] args) {
         // Crear instancia de TablaDatos y definir etiquetas de columnas
@@ -11,27 +15,35 @@ public class App {
         List<String> etiquetasColumnas = Arrays.asList("ID", "Nombre del Producto", "Estado");
         tablaDatos.setEtiquetasColumnas(etiquetasColumnas);
 
-        // Agregar filas iniciales de productos
-        tablaDatos.insertarFila(Arrays.asList("1", "Libro de Java", "En Stock"));
-        tablaDatos.insertarFila(Arrays.asList("2", "Manual de Python", "Vendido"));
-        tablaDatos.insertarFila(Arrays.asList("3", "Guía de SQL", "En Stock"));
-        tablaDatos.insertarFila(Arrays.asList("4", "Diccionario de Inglés", "Agotado"));
-        tablaDatos.insertarFila(Arrays.asList("5", "Diccionario de Francés", "Vendido"));
+        // Agregar filas iniciales de productos con manejo de ExcepcionDatosInvalidos
+        try {
+            tablaDatos.insertarFila(Arrays.asList("1", "Libro de Java", "En Stock"));
+            tablaDatos.insertarFila(Arrays.asList("2", "Manual de Python", "Vendido"));
+            tablaDatos.insertarFila(Arrays.asList("3", "Guía de SQL", "En Stock"));
+            tablaDatos.insertarFila(Arrays.asList("4", "Diccionario de Inglés", "Agotado"));
+            tablaDatos.insertarFila(Arrays.asList("5", "Diccionario de Francés", "Vendido"));
+        } catch (ExcepcionDatosInvalidos e) {
+            System.err.println("Error al insertar fila: " + e.getMessage());
+        }
 
         // Mostrar la tabla de productos en consola
         System.out.println("Tabla de productos inicial:");
         mostrarTabla(tablaDatos);
 
-        // Modificar el estado de un producto (usando setValor en Fila), con verificación de existencia
+        // Modificar el estado de un producto con verificación de existencia y ExcepcionDatosInvalidos
         System.out.println("\nModificando el estado del producto con ID 2...");
         if (tablaDatos.getFilas().size() > 1) {
-            tablaDatos.getFila(1).getCelda(2).setValor("En Stock");
+            try {
+                tablaDatos.getFila(1).getCelda(2).setValor("En Stock");
+            } catch (ExcepcionDatosInvalidos e) {
+                System.err.println("Error al modificar el estado: " + e.getMessage());
+            }
         } else {
             System.out.println("La fila con ID 2 no existe.");
         }
         mostrarTabla(tablaDatos);
 
-        // Eliminar un producto (por ejemplo, el producto con ID 4), con verificación de existencia
+        // Eliminar un producto con verificación de existencia
         System.out.println("\nEliminando el producto con ID 4...");
         if (tablaDatos.getFilas().size() > 3) {
             tablaDatos.eliminarFilas(3);
@@ -40,26 +52,27 @@ public class App {
         }
         mostrarTabla(tablaDatos);
 
-        // Filtrar productos que están "En Stock" (usando FiltroFila)
+        // Filtrar productos que están "En Stock"
         System.out.println("\nFiltrando productos con estado 'En Stock'...");
         FiltroFila filtro = new FiltroFila("Estado", "En Stock", tablaDatos);
         List<Fila> filasFiltradas = filtro.filtrar();
         mostrarFilas(filasFiltradas);
 
-        // Ordenar productos por "Nombre del Producto" (usando OrdenadorFilas)
+        // Ordenar productos por "Nombre del Producto"
         System.out.println("\nOrdenando productos por 'Nombre del Producto'...");
         OrdenadorFilas ordenador = new OrdenadorFilas("Nombre del Producto", true, tablaDatos);
         List<Fila> filasOrdenadas = ordenador.ordenar(tablaDatos.getFilas());
         mostrarFilas(filasOrdenadas);
 
-        // Exportar la tabla a un archivo CSV (usando BibliotecaCSV)
+        // Exportar la tabla a un archivo CSV
         String nombreArchivo = "inventario.csv";
-        String rutaArchivo = "test.txt";
+        String rutaArchivo = "InventarioLibreria.csv";
         File archivo = new File(rutaArchivo);
+        
         if (!archivo.exists()) {
             try {
                 archivo.createNewFile();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 System.out.println("Error al crear el archivo: " + e.getMessage());
             }
         }
@@ -72,6 +85,8 @@ public class App {
             System.out.println("\nArchivo CSV exportado exitosamente a " + rutaArchivo + nombreArchivo);
         } catch (IOException e) {
             System.err.println("Error al exportar el archivo CSV: " + e.getMessage());
+        } catch (ExcepcionLecturaArchivo e) {
+            System.err.println("Error al escribir en el archivo CSV: " + e.getMessage());
         }
 
         // Pruebas adicionales para GestorErrores y GestorValoresFaltantes
@@ -81,7 +96,14 @@ public class App {
         GestorErrores gestorErrores = new GestorErrores();
         GestorValoresFaltantes gestorValoresFaltantes = new GestorValoresFaltantes(rutaArchivo, tablaDatos, gestorErrores);
 
-        // Asumimos que los gestores aplican sus procesos al instanciarse o al interactuar con tablaDatos en el flujo.
+        // Verificar valores faltantes en la tabla
+        try {
+            gestorValoresFaltantes.verificarValoresCompletos(tablaDatos);
+            System.out.println("Todos los valores están completos.");
+        } catch (ExcepcionValorFaltante e) {
+            System.err.println("Error: Hay valores faltantes en la tabla - " + e.getMessage());
+        }
+
         System.out.println("Pruebas completadas con GestorErrores y GestorValoresFaltantes.");
     }
 

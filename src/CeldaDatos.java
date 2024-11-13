@@ -1,10 +1,11 @@
+
 public class CeldaDatos {
     
-    private Object valor;             // Valor almacenado en la celda, de tipo genérico
-    private String tipoDato;          // Tipo de dato del valor (e.g., "String", "Integer")
-    private int posicionFila;         // Posición de la celda en la fila de la tabla
-    private int posicionColumna;      // Posición de la celda en la columna de la tabla
-    private boolean esValorFaltante;  // Indica si la celda tiene un valor faltante (true si es nulo)
+    private Object valor;             
+    private String tipoDato;         
+    private int posicionFila;         
+    private int posicionColumna;      
+    private boolean esValorFaltante; 
 
     // Constructor que inicializa el valor, tipo de dato y posiciones, y determina si es valor faltante
     public CeldaDatos(Object valor, String tipoDato, int posicionFila, int posicionColumna) {
@@ -53,4 +54,7 @@ public class CeldaDatos {
     public int getPosicionColumna() {
         return posicionColumna;
     }
+
 }
+    
+

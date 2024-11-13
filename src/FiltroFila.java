@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FiltroFila {
-    private String columna;         // Nombre de la columna sobre la que se aplicará el filtro
-    private String valorFiltro;     // Valor que se usará como criterio de filtrado
-    private TablaDatos tablaDatos;  // Tabla de datos en la que se aplicará el filtro
+    private String columna;         
+    private String valorFiltro;     
+    private TablaDatos tablaDatos;  
 
     // Constructor que inicializa la columna, el valor de filtro y la tabla de datos
     public FiltroFila(String columna, String valorFiltro, TablaDatos tablaDatos) {

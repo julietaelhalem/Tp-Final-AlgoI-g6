@@ -4,9 +4,9 @@ import java.util.List;
 
 public class LectorCSV {
     
-    private char delimitador;     // Caracter delimitador para separar los valores del CSV
-    private String rutaArchivo;   // Ruta del archivo CSV a leer o escribir
-    private String encoding;      // Codificación utilizada para leer/escribir el archivo
+    private char delimitador;     
+    private String rutaArchivo;   
+    private String encoding;      
 
     // Constructor que inicializa el delimitador, la ruta del archivo y la codificación
     public LectorCSV(char delimitador, String rutaArchivo, String encoding) {
@@ -26,9 +26,9 @@ public class LectorCSV {
                 String[] valores = linea.split(String.valueOf(delimitador));
                 List<Object> fila = new ArrayList<>();
                 for (String valor : valores) {
-                    fila.add(valor); // Agrega cada valor a la fila
+                    fila.add(valor); 
                 }
-                tablaDatos.insertarFila(fila); // Inserta la fila en la tabla de datos
+                tablaDatos.insertarFila(fila); 
             }
         }
         return tablaDatos;
@@ -46,8 +46,8 @@ public class LectorCSV {
                     // Agrega el valor de cada celda a la línea, seguido del delimitador
                     linea.append(fila.getCelda(j).getValor()).append(delimitador);
                 }
-                writer.write(linea.toString()); // Escribe la línea en el archivo
-                writer.newLine(); // Salto de línea después de cada fila
+                writer.write(linea.toString()); 
+                writer.newLine(); 
             }
         }
     }

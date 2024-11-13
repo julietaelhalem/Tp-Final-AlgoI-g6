@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Fila {
-    private List<CeldaDatos> celdas; // Lista que almacena las celdas (CeldaDatos) de la fila
+    private List<CeldaDatos> celdas; 
 
     // Constructor que inicializa la lista de celdas
     public Fila() {
@@ -29,14 +29,7 @@ public class Fila {
         return celdas;
     }
 
-    // Crea y devuelve una copia de la fila, con copias individuales de cada celda
-    public Fila copiar() {
-        Fila copia = new Fila();
-        for (CeldaDatos celda : celdas) {
-            copia.agregarCelda(new CeldaDatos(celda.getValor(), celda.getTipoDato(), celda.getPosicionFila(), celda.getPosicionColumna()));
-        }
-        return copia;
-    }
+
 
     // Obtiene el valor de una celda a partir de la etiqueta de la columna
     public String getValor(String columna, TablaDatos tablaDatos) {

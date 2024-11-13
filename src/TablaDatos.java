@@ -2,10 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TablaDatos {
-    private List<Fila> filas;                  // Lista de filas en la tabla
-    private int numeroFilas;                   // Número de filas en la tabla
-    private int numeroColumnas;                // Número de columnas en la tabla
-    private List<String> etiquetasColumnas;    // Etiquetas de las columnas
+    private List<Fila> filas;                  
+    private int numeroFilas;                  
+    private int numeroColumnas;               
+    private List<String> etiquetasColumnas;   
 
     public TablaDatos() {
         this.filas = new ArrayList<>();
